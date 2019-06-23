@@ -22,4 +22,4 @@ fourseven:scss
 accounts-password
 momentjs:moment
 session
-practicalmeteor:mocha
+meteortesting:mocha
