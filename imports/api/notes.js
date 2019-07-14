@@ -55,7 +55,7 @@ Meteor.methods({
         type: String,
         optional: true
       },
-      title: {
+      body: {
         type: String,
         optional: true
       }
