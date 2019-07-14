@@ -7,10 +7,11 @@ import Signup from "/imports/ui/Signup";
 import NotFound from "/imports/ui/NotFound";
 import Login from "/imports/ui/Login";
 import Dashboard from "/imports/ui/Dashboard";
-const history = createBrowserHistory();
 
 const unAuthenticatedPages = ["/", "signup"];
 const authenticatedPages = ["/dashboard"];
+
+const history = createBrowserHistory();
 
 const onEnterPublicPage = () => {
   if (Meteor.userId()) {
@@ -44,6 +45,11 @@ export const routes = (
       <Route path="/signup" component={Signup} render={onEnterPublicPage} />
       <Route
         path="/dashboard"
+        component={Dashboard}
+        render={onEnterPrivatePage}
+      />
+      <Route
+        path="/dashboard/:id"
         component={Dashboard}
         render={onEnterPrivatePage}
       />
