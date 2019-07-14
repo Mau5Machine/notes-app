@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { BrowserRouter, Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Accounts } from "meteor/accounts-base";
 import PropTypes from "prop-types";
-import { Form, Button, Card } from "semantic-ui-react";
 import { createContainer } from "meteor/react-meteor-data";
 export class Signup extends Component {
   constructor(props) {
@@ -58,7 +57,7 @@ export class Signup extends Component {
             <button className="button">Create Account</button>
           </form>
 
-          {/* <Link to="/">Have an account?</Link> */}
+          <Link to="/">Have an account?</Link>
         </div>
       </div>
     );

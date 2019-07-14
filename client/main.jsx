@@ -2,11 +2,9 @@ import { Tracker } from "meteor/tracker";
 import { Meteor } from "meteor/meteor";
 import { render } from "react-dom";
 import { routes, onAuthChange } from "/imports/routes/routes";
-import { createBrowserHistory } from "history";
+import { browserHistory } from "react-router";
 import "../imports/startup/simple-schema-config";
 import { Session } from "meteor/session";
-
-const history = createBrowserHistory();
 
 // Checking if users log in/out and updating instantly by calling a callback
 Tracker.autorun(() => {
@@ -21,7 +19,7 @@ Tracker.autorun(() => {
 
   // Check if it's defined, if it does, we want to change the URL
   if (selectedNoteId) {
-    history.replace(`/dashboard/${selectedNoteId}`);
+    browserHistory.replace(`/dashboard/${selectedNoteId}`);
   }
 });
 

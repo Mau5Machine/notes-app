@@ -1,74 +1,63 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter,
-  Switch
-} from "react-router-dom";
-import { createBrowserHistory } from "history";
+import { Router, Route, browserHistory } from "react-router";
 
 import Signup from "/imports/ui/Signup";
 import NotFound from "/imports/ui/NotFound";
 import Login from "/imports/ui/Login";
 import Dashboard from "/imports/ui/Dashboard";
+import { Session } from "meteor/session";
 
-const unAuthenticatedPages = ["/", "signup"];
+const unauthenticatedPages = ["/", "signup"];
 const authenticatedPages = ["/dashboard"];
 
-const history = createBrowserHistory();
-
+// TODO: Convert this code into new version of react router
 const onEnterPublicPage = () => {
   if (Meteor.userId()) {
-    history.replace("/dashboard");
+    browserHistory.replace("/dashboard");
   }
 };
 
 const onEnterPrivatePage = () => {
   if (!Meteor.userId()) {
-    history.replace("/");
+    browserHistory.replace("/");
   }
 };
 // nextState includes info about the page that you are about to enter into
-const onEnterNotePage = ({ location }) => {
+const onEnterNotePage = nextState => {
   if (!Meteor.userId()) {
-    history.replace("/");
+    browserHistory.replace("/");
   } else {
-    console.log(location);
+    Session.set("selectedNoteId", nextState.params.id);
   }
 };
 
 export const onAuthChange = isAuthenticated => {
-  const pathName = history.location.pathname;
-  const isUnauthenticatedPage = unAuthenticatedPages.includes(pathName);
-  const isAuthenticatedPage = authenticatedPages.includes(pathName);
+  const pathname = browserHistory.getCurrentLocation().pathname;
+  const isUnauthenticatedPage = unauthenticatedPages.includes(pathname);
+  const isAuthenticatedPage = authenticatedPages.includes(pathname);
 
   if (isUnauthenticatedPage && isAuthenticated) {
-    history.replace("/dashboard");
-  }
-  if (isAuthenticatedPage && !isAuthenticated) {
-    history.replace("/");
+    browserHistory.replace("/dashboard");
+  } else if (isAuthenticatedPage && !isAuthenticated) {
+    browserHistory.replace("/");
   }
 };
 
 export const routes = (
-  <Router history={history}>
-    <Switch>
-      <Route exact path="/" component={Login} render={onEnterPublicPage} />
-      <Route path="/signup" component={Signup} render={onEnterPublicPage} />
-      <Route
-        path="/dashboard"
-        component={Dashboard}
-        render={onEnterPrivatePage}
-      />
-      <Route
-        path="/dashboard/:id"
-        component={Dashboard}
-        render={onEnterNotePage}
-      />
-      <Route component={NotFound} />
-    </Switch>
+  <Router history={browserHistory}>
+    <Route exact path="/" component={Login} onEnter={onEnterPublicPage} />
+    <Route path="/signup" component={Signup} onEnter={onEnterPublicPage} />
+    <Route
+      path="/dashboard"
+      component={Dashboard}
+      onEnter={onEnterPrivatePage}
+    />
+    <Route
+      path="/dashboard/:id"
+      component={Dashboard}
+      onEnter={onEnterNotePage}
+    />
+    <Route component={NotFound} />
   </Router>
 );

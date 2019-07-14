@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { Container, Button } from "semantic-ui-react";
+import React from "react";
 import { Accounts } from "meteor/accounts-base";
 import PropTypes from "prop-types";
 import { createContainer } from "meteor/react-meteor-data";

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { BrowserRouter, Link } from "react-router-dom";
+import { Link } from "react-router";
 import PropTypes from "prop-types";
-import { Form, Button, Card } from "semantic-ui-react";
 import { createContainer } from "meteor/react-meteor-data";
 
 export class Login extends Component {
@@ -48,7 +47,7 @@ export class Login extends Component {
             />
             <button className="button">Login</button>
           </form>
-          {/* <Link to="/signup">Need an account?</Link> */}
+          <Link to="/signup">Need an account?</Link>
         </div>
       </div>
     );
