@@ -1,57 +1,66 @@
-import React, { Component } from 'react';
-import { Meteor } from 'meteor/meteor'
-import { Link } from 'react-router-dom';
-import { Form, Button, Card } from 'semantic-ui-react';
-class Login extends Component {
+import React, { Component } from "react";
+import { Meteor } from "meteor/meteor";
+import { BrowserRouter, Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { Form, Button, Card } from "semantic-ui-react";
+import { createContainer } from "meteor/react-meteor-data";
+
+export class Login extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      error: ''
+      error: ""
     };
   }
   onSubmit(e) {
     e.preventDefault();
     let email = this.refs.email.value.trim();
     let password = this.refs.password.value.trim();
-    Meteor.loginWithPassword({ email }, password, (err) => {
+    this.props.loginWithPassword({ email }, password, err => {
       if (err) {
         this.setState({
-          error: 'Unable to login, check email and password'
+          error: "Unable to login, check email and password"
         });
       } else {
         this.setState({
-          error: ''
+          error: ""
         });
       }
     });
   }
   render() {
     return (
-      <div>
-        <Card
-          centered={true}
-          raised={true}
-        >
-          <Card.Content>
-            <Card.Header>Short Lnk Log In</Card.Header>
-            {this.state.error ? <p>{this.state.error}</p> : undefined}
-            <Form onSubmit={this.onSubmit.bind(this)} noValidate>
-              <Form.Field>
-                <label>Email Address</label>
-                <input type="email" ref="email" name="email" placeholder="Email" />
-              </Form.Field>
-              <Form.Field>
-                <label>Password</label>
-                <input type="password" ref="password" name="password" placeholder="Password" />
-              </Form.Field>
-              <Button type="submit" primary>Sign In</Button>
-            </Form>
-            <Link to="/signup">Don't have an account?</Link>
-          </Card.Content>
-        </Card>
+      <div className="boxed-view">
+        <div className="boxed-view__box">
+          <h1>Login</h1>
+          {this.state.error ? <p>{this.state.error}</p> : undefined}
+          <form
+            onSubmit={this.onSubmit.bind(this)}
+            noValidate
+            className="boxed-view__form"
+          >
+            <input type="email" ref="email" name="email" placeholder="Email" />
+            <input
+              type="password"
+              ref="password"
+              name="password"
+              placeholder="Password"
+            />
+            <button className="button">Login</button>
+          </form>
+          {/* <Link to="/signup">Need an account?</Link> */}
+        </div>
       </div>
     );
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginWithPassword: PropTypes.func.isRequired
+};
+
+export default createContainer(() => {
+  return {
+    loginWithPassword: Meteor.loginWithPassword
+  };
+}, Login);

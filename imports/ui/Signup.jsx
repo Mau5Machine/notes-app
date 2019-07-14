@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Accounts } from 'meteor/accounts-base';
-import { Form, Button, Card } from 'semantic-ui-react';
-class Signup extends Component {
+import React, { Component } from "react";
+import { BrowserRouter, Link } from "react-router-dom";
+import { Accounts } from "meteor/accounts-base";
+import PropTypes from "prop-types";
+import { Form, Button, Card } from "semantic-ui-react";
+import { createContainer } from "meteor/react-meteor-data";
+export class Signup extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      error: ''
+      error: ""
     };
   }
 
@@ -18,48 +20,56 @@ class Signup extends Component {
 
     if (password.length < 9) {
       return this.setState({
-        error: 'Password must be more than 8 characters long'
+        error: "Password must be more than 8 characters long"
       });
     }
-    Accounts.createUser({ email, password }, (err) => {
+    this.props.createUser({ email, password }, err => {
       if (err) {
         this.setState({
           error: err.reason
         });
       } else {
         this.setState({
-          error: ''
+          error: ""
         });
       }
     });
   }
   render() {
     return (
-      <div className="mt-10">
-        <Card
-          centered={true}
-          raised={true}
-        >
-          <Card.Content>
-            <Card.Header>Sign Up</Card.Header>
-            {this.state.error ? <p>{this.state.error}</p> : undefined}
-            <Form onSubmit={this.onSubmit.bind(this)} noValidate>
-              <Form.Field>
-                <label>Email Address</label>
-                <input type="email" ref="email" name="email" placeholder="Email" />
-              </Form.Field>
-              <Form.Field>
-                <label>Password</label>
-                <input type="password" ref="password" name="password" placeholder="Password" />
-              </Form.Field>
-              <Button type="submit" primary>Sign Up</Button>
-            </Form>
-            <Link to="/">Already have an account?</Link>
-          </Card.Content>
-        </Card>
+      <div className="boxed-view">
+        <div className="boxed-view__box">
+          <h1>Join</h1>
+
+          {this.state.error ? <p>{this.state.error}</p> : undefined}
+
+          <form
+            onSubmit={this.onSubmit.bind(this)}
+            noValidate
+            className="boxed-view__form"
+          >
+            <input type="email" ref="email" name="email" placeholder="Email" />
+            <input
+              type="password"
+              ref="password"
+              name="password"
+              placeholder="Password"
+            />
+            <button className="button">Create Account</button>
+          </form>
+
+          {/* <Link to="/">Have an account?</Link> */}
+        </div>
       </div>
-    )
+    );
   }
 }
 
-export default Signup;
+Signup.propTypes = {
+  createUser: PropTypes.func.isRequired
+};
+export default createContainer(() => {
+  return {
+    createUser: Accounts.createUser
+  };
+}, Signup);

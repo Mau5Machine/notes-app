@@ -5,6 +5,7 @@ import moment from "moment";
 
 export const Notes = new Mongo.Collection("notes");
 
+// This is a publication for the notes in the database, in order to have access to the notes, you need to subscribe to this publication
 if (Meteor.isServer) {
   Meteor.publish("notes", function() {
     return Notes.find({ userId: this.userId });
