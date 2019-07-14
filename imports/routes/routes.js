@@ -1,6 +1,13 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
-import { Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter,
+  Switch
+} from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 import Signup from "/imports/ui/Signup";
@@ -22,6 +29,14 @@ const onEnterPublicPage = () => {
 const onEnterPrivatePage = () => {
   if (!Meteor.userId()) {
     history.replace("/");
+  }
+};
+// nextState includes info about the page that you are about to enter into
+const onEnterNotePage = ({ location }) => {
+  if (!Meteor.userId()) {
+    history.replace("/");
+  } else {
+    console.log(location);
   }
 };
 
@@ -51,7 +66,7 @@ export const routes = (
       <Route
         path="/dashboard/:id"
         component={Dashboard}
-        render={onEnterPrivatePage}
+        render={onEnterNotePage}
       />
       <Route component={NotFound} />
     </Switch>

@@ -3,6 +3,7 @@ import { createContainer } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { Notes } from "../api/notes";
 import PropTypes from "prop-types";
+import { Session } from "meteor/session";
 
 import NoteListHeader from "./NoteListHeader";
 import NoteListItem from "./NoteListItem";
@@ -26,11 +27,20 @@ NoteList.propTypes = {
   notes: PropTypes.array.isRequired
 };
 export default createContainer(() => {
+  // This will run and rerender the list everytime this changes
+  const selectedNoteId = Session.get("selectedNoteId");
   // This subscribes me to the notes publication and I am allowed to fetch data from the notes in the db now
   Meteor.subscribe("notes");
 
   return {
-    // Returning all notes this usr has access too, fetch takes the cursor and returns an array
-    notes: Notes.find().fetch()
+    // Returning all notes this user has access too, fetch takes the cursor and returns an array
+    notes: Notes.find()
+      .fetch()
+      .map(note => {
+        return {
+          ...note,
+          selected: note._id === selectedNoteId
+        };
+      })
   };
 }, NoteList);
