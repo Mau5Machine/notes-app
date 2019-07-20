@@ -9,7 +9,9 @@ import { Session } from "meteor/session";
 // Checking if users log in/out and updating instantly by calling a callback
 Tracker.autorun(() => {
   const isAuthenticated = !!Meteor.userId();
-  onAuthChange(isAuthenticated);
+  const currentPagePrivacy = Session.get("currentPagePrivacy");
+
+  onAuthChange(isAuthenticated, currentPagePrivacy);
 });
 
 // Watch for a change in the selected note id session value, when selectedNoteId changes, we update the URL automatically
