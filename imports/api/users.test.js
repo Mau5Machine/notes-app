@@ -1,5 +1,4 @@
-import expect from "expect.js";
-import assert from "assert";
+import { assert } from "chai";
 import { validateNewUser } from "./users";
 import { Meteor } from "meteor/meteor";
 
@@ -19,7 +18,7 @@ if (Meteor.isServer) {
       };
       assert.throws(() => {
         validateNewUser(testUser2);
-      }, "Something went wrong!");
+      }, "Email must be a valid email address");
     });
   });
 }
